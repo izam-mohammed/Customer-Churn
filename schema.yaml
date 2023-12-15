@@ -22,7 +22,7 @@ COLUMNS:
   Churn: object
 
 TARGET_COLUMN:
-  name: Loan_Status
+  name: Churn
 
 COL_NAN_RATIO: 0.1
 
