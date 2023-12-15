@@ -5,3 +5,8 @@ data_ingestion:
   source_URL: https://github.com/izam-mohammed/data-source/raw/main/customer-churn.zip
   local_data_file: artifacts/data_ingestion/data.zip
   unzip_dir: artifacts/data_ingestion
+
+data_validation:
+  root_dir: artifacts/data_validation
+  unzip_data_dir: artifacts/data_ingestion/data.csv
+  STATUS_FILE: artifacts/data_validation/status.txt

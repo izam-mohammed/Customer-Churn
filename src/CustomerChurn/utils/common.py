@@ -134,3 +134,16 @@ def save_txt(data, path: Path):
         f.write(data)
 
     logger.info(f"txt file saved at: {path}")
+
+def is_nan(value):
+    """Check if a value is NaN.
+
+    Args:
+        values (Any): Any values
+
+    Returns:
+        Bool: type of the value is na
+    """
+    return isinstance(value, float) and np.isnan(value)
+
+
