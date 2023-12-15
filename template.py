@@ -45,7 +45,7 @@ list_of_files = [
     "CONTRIBUTING.md",
     "CODE_OF_CONDUCT.md",
     ".gitignore",
-    "LICENCE",
+    "LICENSE",
 ]
 
 for filepath in list_of_files:

@@ -1,0 +1,119 @@
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# dotenv
+.env
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# Django development
+db.sqlite3
+manage.py
+
+# VSCode settings
+.vscode/
+
+# Sublime Text settings
+*.sublime-project
+*.sublime-workspace
+
+# PyCharm settings
+.idea/
+
+# Environments
+.env/
+env/
+venv/
+ENV/
+
+# Miscellaneous
+*.log
+*.pot
+*.pyc
+*.swp
+._*
+.DS_Store
+
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Model files
+*.model
+*.h5
+
+# Compiled Python files
+__pycache__/
+
+# Distribution/installation
+dist/
+build/
+
+# Ignore any saved models or checkpoints
+model_checkpoints/
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# artifacts
+artifacts/
+
+#catboost
+catboost_info/
+reports/
