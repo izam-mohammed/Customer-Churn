@@ -36,3 +36,11 @@ class ModelTrainerConfig:
     model_name: str
     params: dict
     target_col: str
+
+@dataclass(frozen=True)
+class ModelEvaluationConfig:
+    root_dir: Path
+    test_data_path: Path
+    model_path: Path
+    target_column: str
+    models_dir: str

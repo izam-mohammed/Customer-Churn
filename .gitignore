@@ -111,9 +111,6 @@ model_checkpoints/
 .DS_Store
 Thumbs.db
 
-# artifacts
-artifacts/
-
 #catboost
 catboost_info/
 reports/
