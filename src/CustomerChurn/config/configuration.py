@@ -1,6 +1,7 @@
 from CustomerChurn.constants import *
 from CustomerChurn.utils.common import read_yaml, create_directories
-from CustomerChurn.entity.config_entity import (DataIngestionConfig)
+from CustomerChurn.entity.config_entity import (DataIngestionConfig,
+                                                DataValidationConfig,)
 
 class ConfigurationManager:
     def __init__(
@@ -30,3 +31,25 @@ class ConfigurationManager:
         )
 
         return data_ingestion_config
+    
+
+    def get_data_validation_config(self) -> DataValidationConfig:
+        config = self.config.data_validation
+        schema = self.schema.COLUMNS
+        target_col = self.schema.TARGET_COLUMN
+        nan_ratio = self.schema.COL_NAN_RATIO
+        categories = self.schema.CATEGORIES
+
+        create_directories([config.root_dir])
+
+        data_validation_config = DataValidationConfig(
+            root_dir=config.root_dir,
+            STATUS_FILE=config.STATUS_FILE,
+            unzip_data_dir = config.unzip_data_dir,
+            all_schema=schema,
+            target_col=target_col.name,
+            nan_ratio=nan_ratio,
+            categories=categories,
+        )
+
+        return data_validation_config
