@@ -18,3 +18,12 @@ class DataValidationConfig:
     target_col: str
     nan_ratio: float
     categories: dict
+
+@dataclass(frozen=True)
+class DataTransformationConfig:
+    root_dir: Path
+    data_path: Path
+    encoder_name: str
+    test_size: float
+    all_cols: list
+    target_col: str
