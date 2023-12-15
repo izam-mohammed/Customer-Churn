@@ -1,1 +1,59 @@
-key: val
+Decision_Tree: 
+  - criterion:
+    - entropy
+    - gini
+  - splitter:
+    - random
+    - best
+
+
+Random_Forest:
+  - min_samples_leaf:
+    - 1
+    - 2
+ 
+SVC:
+  - kernel:
+    - rbf
+  - C: 
+    - 1
+    - 2
+    - 3
+
+LogisticRegression:
+  - C:
+    - 1
+    - 2
+    - 3
+
+MultinomialNB:
+  - fit_prior:
+    - True
+    - False
+
+GradientBoost:
+  - n_estimators:
+    - 10
+    - 100
+    - 1000
+
+AdaBoost:
+  - n_estimators:
+    - 20
+    - 40
+    - 200
+    - 400
+
+XGBoost:
+  - max_depth:
+    - 1
+    - 2
+    - 3
+    - 10
+
+LGBM:
+  - max_depth:
+    - 1
+    - 2
+    - 3
+    - 10
