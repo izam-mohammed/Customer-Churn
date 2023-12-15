@@ -12,4 +12,6 @@ lightgbm==3.3.2
 ensure==1.0.2
 python-box==6.0.2
 optuna==3.5.0
+dataframe_image==0.2.3
+jinja2==3.1.2
 -e .

@@ -146,4 +146,18 @@ def is_nan(value):
     """
     return isinstance(value, float) and np.isnan(value)
 
+def round_batch(*vars):
+    """
+    Round a batch of values individually
+
+    Args:
+        Any
+
+    Returns:
+        tuple: contain all values in batch
+    """
+    res = []
+    for i in vars:
+        res.append(round(i, 3))
+    return tuple(res)
 
