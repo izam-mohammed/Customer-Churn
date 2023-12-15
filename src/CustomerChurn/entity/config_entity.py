@@ -27,3 +27,12 @@ class DataTransformationConfig:
     test_size: float
     all_cols: list
     target_col: str
+
+@dataclass(frozen=True)
+class ModelTrainerConfig:
+    root_dir: Path
+    train_data_path: Path
+    test_data_path: Path
+    model_name: str
+    params: dict
+    target_col: str
