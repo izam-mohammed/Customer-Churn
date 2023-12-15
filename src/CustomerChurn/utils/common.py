@@ -120,3 +120,17 @@ def get_size(path: Path) -> str:
     """
     size_in_kb = round(os.path.getsize(path) / 1024)
     return f"~ {size_in_kb} KB"
+
+
+@ensure_annotations
+def save_txt(data, path: Path):
+    """save text file
+
+    Args:
+        data (Any): data to be saved as text
+        path (Path): path to text file
+    """
+    with open(path, "w") as f:
+        f.write(data)
+
+    logger.info(f"txt file saved at: {path}")
