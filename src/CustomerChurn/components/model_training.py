@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score
 from CustomerChurn import logger
 from CustomerChurn.utils.common import save_bin, create_directories, save_bin_dup
 from CustomerChurn.entity.config_entity import ModelTrainerConfig
+from scipy.stats import reciprocal, uniform
 
 # models
 from sklearn.linear_model import LogisticRegression
@@ -33,7 +34,7 @@ class ModelTrainer:
 
 
     def _randomized_search(self, name,clf,params, runs=50): 
-        rand_clf = RandomizedSearchCV(clf, params, n_iter=runs, cv=5, n_jobs=-1, random_state=2, verbose=0)     
+        rand_clf = RandomizedSearchCV(clf, params, n_iter=runs, cv=5, n_jobs=-1, random_state=2, verbose=2)     
 
         rand_clf.fit(self.X_train, self.y_train) 
         best_model = rand_clf.best_estimator_
@@ -54,7 +55,7 @@ class ModelTrainer:
         logger.info('Predicted with {} ; Test score : {:.3f}'.format(name, accuracy))
         
         return best_model, accuracy
-        
+
 
     def train(self):
         model_params = self.config.params
@@ -62,35 +63,101 @@ class ModelTrainer:
         models = ConfigBox({
             "Decision_Tree": {
                 "model" : DecisionTreeClassifier(),
-                "params" : model_params.Decision_Tree
+                "params" : model_params.Decision_Tree,
+                "auto":{
+                        "criterion" : ['gini', 'entropy'],
+                        "splitter" : ['best', 'random'],
+                        "max_depth" : range( 1, 32),
+                        "min_samples_split" : uniform( 0.1, 1.0),
+                        "min_samples_leaf" : uniform( 0.1, 0.5),
+                        "max_features" : ['auto', 'sqrt', 'log2', None],
+                }
             },
             "Random_Forest": {
                 "model" : RandomForestClassifier(),
-                "params" : model_params.Random_Forest
+                "params" : model_params.Random_Forest,
+                "auto":{
+                    'n_estimators': range(10, 200),
+                    'criterion': ['gini', 'entropy'],
+                    'max_depth': range(1, 20),
+                    'min_samples_split': range(2, 20),
+                    'min_samples_leaf': range(1, 20),
+                    'max_features': ['auto', 'sqrt', 'log2', None],
+                    'bootstrap': [True, False]
+                }
             },
             "SVC": {
                 "model" : SVC(),
-                "params" : model_params.SVC
+                "params" : model_params.SVC,
+                "auto":{
+                    'C': reciprocal(0.1, 10),  
+                    'kernel': ['linear', 'poly', 'rbf', 'sigmoid'],
+                    'degree': range(2, 7),
+                    'gamma': ['scale', 'auto'] + list(uniform(0.1, 1.0).rvs(10)),
+                    'coef0': uniform(-1, 1)
+                }
             },
             "LogisticRegression":{
                 "model" : LogisticRegression(),
-                "params" : model_params.LogisticRegression
+                "params" : model_params.LogisticRegression,
+                "auto" : {
+                        'penalty': ['l1', 'l2', 'elasticnet', 'none'],
+                        'C': uniform(0.1, 10), 
+                        'fit_intercept': [True, False],
+                        'solver': ['newton-cg', 'lbfgs', 'liblinear', 'sag', 'saga'],
+                        'max_iter': range(50, 500, 50)
+                }
             },
             "MultinomialNB":{
                 "model" : MultinomialNB(),
-                "params" : model_params.MultinomialNB
+                "params" : model_params.MultinomialNB,
+                "auto": {
+                        'alpha': uniform(0.1, 2.0), 
+                        'fit_prior': [True, False],
+                        'class_prior': [None, list(uniform(0.1, 1.0).rvs(3))] 
+                    }
             },
             "GradientBoost":{
                 "model": GradientBoostingClassifier(),
-                "params" : model_params.GradientBoost
+                "params" : model_params.GradientBoost,
+                "auto": {
+                        'learning_rate': uniform(0.01, 0.2),  # Uniform distribution for learning_rate
+                        'n_estimators': range(50, 200, 30),
+                        'max_depth': range(3, 10),
+                        'min_samples_split': uniform(0.1, 1.0),  # Uniform distribution for min_samples_split
+                        'min_samples_leaf': uniform(0.1, 0.5),   # Uniform distribution for min_samples_leaf
+                        'subsample': uniform(0.5, 1.0),           # Uniform distribution for subsample
+                        'max_features': ['auto', 'sqrt', 'log2', None],
+                }
             },
             "AdaBoost":{
                 "model" : AdaBoostClassifier(),
-                "params" : model_params.AdaBoost
+                "params" : model_params.AdaBoost,
+                "auto":{
+                        'n_estimators': range(50, 500),
+                        'learning_rate': uniform(0.01, 1.0), 
+                        'base_estimator': [None, DecisionTreeClassifier(max_depth=1), DecisionTreeClassifier(max_depth=2)],
+                }
             },
             "XGBoost":{
                 "model" : XGBClassifier(),
-                "params" : model_params.XGBoost
+                "params" : model_params.XGBoost,
+                "auto":{
+                        'learning_rate': uniform(0.01, 0.2),
+                        'n_estimators': range(50, 200),
+                        'max_depth': range(3, 10),
+                        'min_child_weight': range(1, 10),
+                        'subsample': uniform(0.5, 1.0),
+                        'colsample_bytree': uniform(0.5, 1.0),
+                        'gamma': uniform(0, 1),
+                        'reg_alpha': uniform(0, 1),
+                        'reg_lambda': uniform(0, 1),
+                        'scale_pos_weight': range(1, 10),
+                        'base_score': uniform(0.1, 0.9),
+                        'booster': ['gbtree', 'gblinear', 'dart'],
+                        'n_jobs': [-1],
+                        'random_state': range(1, 100),
+                }
             },
         })
 
@@ -100,7 +167,14 @@ class ModelTrainer:
             clf = models[model].model
             params = models[model].params
 
-            clf_model, score = self._randomized_search(name=str(model) ,clf=clf, params=params)
+            if self.config.auto_select:
+                params = models[model].auto
+            else:
+                params = models[model].params
+            if model=="XGBoost":
+                clf_model, score = self._randomized_search(name=str(model) ,clf=clf, params=params, runs=300)
+            else:
+                clf_model, score = self._randomized_search(name=str(model) ,clf=clf, params=params)
             trained_models.append((clf_model, score))
 
             save_bin(data=clf_model, path=Path(os.path.join(self.config.root_dir, f"models/{str(model)}.joblib")))

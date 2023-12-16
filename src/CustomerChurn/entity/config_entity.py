@@ -38,6 +38,7 @@ class ModelTrainerConfig:
     params: dict
     target_col: str
     permanent_path: str
+    auto_select: bool
 
 @dataclass(frozen=True)
 class ModelEvaluationConfig:

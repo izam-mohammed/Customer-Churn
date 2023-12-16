@@ -23,6 +23,7 @@ model_trainer:
   test_data_path: artifacts/data_transformation/test.csv
   model_name: model.joblib
   permanent_path: saved_models/
+  auto_select: True
 
 model_evaluation:
   root_dir: artifacts/model_evaluation
