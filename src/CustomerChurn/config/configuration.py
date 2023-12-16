@@ -62,6 +62,7 @@ class ConfigurationManager:
         config = self.config.data_transformation
         all_cols = list(self.schema.COLUMNS.keys())
         target_col = self.schema.TARGET_COLUMN
+        features = self.schema.FEATURES
 
         create_directories([config.root_dir])
 
@@ -72,6 +73,7 @@ class ConfigurationManager:
             test_size=config.test_size,
             all_cols=all_cols,
             target_col=target_col.name,
+            features=features,
         )
 
         return data_transformation_config

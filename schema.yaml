@@ -86,3 +86,27 @@ CATEGORIES:
   Churn :
     - 'No'
     - 'Yes' 
+
+FEATURES:
+  categorical:
+    - gender
+    - Partner
+    - Dependents
+    - PhoneService
+    - MultipleLines
+    - InternetService
+    - OnlineSecurity
+    - OnlineBackup
+    - DeviceProtection
+    - TechSupport
+    - StreamingTV
+    - StreamingMovies
+    - Contract
+    - PaperlessBilling
+    - PaymentMethod
+    - SeniorCitizen
+    - Churn
+  numerical:
+    - TotalCharges
+    - tenure
+    - MonthlyCharges

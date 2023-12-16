@@ -28,3 +28,10 @@ model_evaluation:
   test_data_path: artifacts/data_transformation/test.csv
   model_path: artifacts/model_trainer/model.joblib
   models_dir: artifacts/model_trainer/models
+
+prediction:
+  root_dir: artifacts/prediction
+  model_path: artifacts/model_trainer/model.joblib
+  vectorizer_path: artifacts/data_transformation/encoder.joblib
+  data_path: artifacts/prediction/data.csv
+  prediction_file: artifacts/prediction/prediction.json

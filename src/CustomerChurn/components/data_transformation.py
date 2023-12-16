@@ -19,9 +19,14 @@ class DataTransformation:
         data = pd.read_csv(self.config.data_path)
         data.drop(["customerID"], axis=1, inplace=True)
 
+        # convert total charges to numeric
+        data['TotalCharges'] = pd.to_numeric(data['TotalCharges'], errors='coerce')
 
-        categorical_feautres = list(data.select_dtypes(include="object").columns)
-        numeric_features = list(data.select_dtypes(exclude="object").columns)
+        categorical_feautres = self.config.features.categorical
+        numeric_features = self.config.features.numerical
+
+        logger.info(f"Numeric features: {numeric_features}")
+        logger.info(f"Categorical features: {categorical_feautres}")
 
         numeric_transformer = Pipeline(
             steps=[

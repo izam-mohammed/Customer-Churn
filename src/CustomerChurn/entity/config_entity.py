@@ -27,6 +27,7 @@ class DataTransformationConfig:
     test_size: float
     all_cols: list
     target_col: str
+    features: dict
 
 @dataclass(frozen=True)
 class ModelTrainerConfig:
