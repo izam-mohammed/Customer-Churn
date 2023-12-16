@@ -17,7 +17,6 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from xgboost import XGBClassifier
-from lightgbm import LGBMClassifier
 
 
 
@@ -93,10 +92,6 @@ class ModelTrainer:
                 "model" : XGBClassifier(),
                 "params" : model_params.XGBoost
             },
-            "LGBM":{
-                "model" : LGBMClassifier(),
-                "params" : model_params.LGBM
-            }
         })
 
         create_directories([os.path.join(self.config.root_dir, "models")])
