@@ -5,7 +5,7 @@ from pathlib import Path
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.metrics import accuracy_score
 from CustomerChurn import logger
-from CustomerChurn.utils.common import save_bin, create_directories
+from CustomerChurn.utils.common import save_bin, create_directories, save_bin_dup
 from CustomerChurn.entity.config_entity import ModelTrainerConfig
 
 # models
@@ -114,6 +114,7 @@ class ModelTrainer:
         best_model = trained_models[0][0]  # taking the model
 
         save_bin(data=best_model, path=Path(os.path.join(self.config.root_dir, self.config.model_name)))
+        save_bin_dup(data=best_model, path=Path(os.path.join(self.config.permanent_path, "model.joblib")))
 
         best_model_name = str(best_model)[:str(best_model).find("(")]
         best_model_score = round(trained_models[0][1], 3)

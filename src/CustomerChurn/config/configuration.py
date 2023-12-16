@@ -92,6 +92,7 @@ class ConfigurationManager:
             model_name = config.model_name,
             params = self.params,
             target_col=target_col.name,
+            permanent_path=config.permanent_path,
         )
 
         return model_trainer_config

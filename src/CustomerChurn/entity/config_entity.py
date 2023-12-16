@@ -37,6 +37,7 @@ class ModelTrainerConfig:
     model_name: str
     params: dict
     target_col: str
+    permanent_path: str
 
 @dataclass(frozen=True)
 class ModelEvaluationConfig:
