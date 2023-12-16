@@ -101,16 +101,16 @@ def save_bin_dup(data, path: Path):
         data (Any): data to be saved as binary
         path (Path): path to binary file
     """
-    while True:
-        num = 1
-        str_num = str(num).zfill(2)
-        name, ext = os.path.splitext(path)
-        file_name = f"{name}_{str_num}{ext}"
-        if not os.path.exists(file_name):
-            joblib.dump(value=data, filename=file_name)
-            break
-        else:
-            num += 1
+    ls = sorted(os.listdir(os.path.dirname(path)))
+    number = os.path.splitext(ls[-1])[0][-2:]
+    if number == "__":
+        num_int = 1
+    else:
+        num_int = int(number) + 1
+    str_num = str(num_int).zfill(2)
+    name, ext = os.path.splitext(path)
+    file_name = f"{name}_{str_num}{ext}"
+    joblib.dump(value=data, filename=file_name)
 
     logger.info(f"binary file saved at: {file_name}")
 
