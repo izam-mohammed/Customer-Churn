@@ -4,7 +4,8 @@ from CustomerChurn.entity.config_entity import (DataIngestionConfig,
                                                 DataValidationConfig,
                                                 DataTransformationConfig,
                                                 ModelTrainerConfig,
-                                                ModelEvaluationConfig,)
+                                                ModelEvaluationConfig,
+                                                PredictionConfig,)
 
 class ConfigurationManager:
     def __init__(
@@ -112,3 +113,22 @@ class ConfigurationManager:
         )
 
         return model_evaluation_config
+    
+    
+    def get_prediction_config(self) -> PredictionConfig:
+        config = self.config.prediction
+        target_column = self.schema.TARGET_COLUMN
+
+        create_directories([config.root_dir])
+
+        prediction_config = PredictionConfig(
+            root_dir = config.root_dir,
+            model_path= config.model_path,
+            vectorizer_path=config.vectorizer_path,
+            data_path=config.data_path,
+            prediction_file=config.prediction_file,
+            target_column=target_column.name,
+           
+        )
+
+        return prediction_config
