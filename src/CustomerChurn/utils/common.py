@@ -94,6 +94,28 @@ def save_bin(data, path: Path):
 
 
 @ensure_annotations
+def save_bin_dup(data, path: Path):
+    """save binary file
+
+    Args:
+        data (Any): data to be saved as binary
+        path (Path): path to binary file
+    """
+    while True:
+        num = 1
+        str_num = str(num).zfill(2)
+        name, ext = os.path.splitext(path)
+        file_name = f"{name}_{str_num}{ext}"
+        if not os.path.exists(file_name):
+            joblib.dump(value=data, filename=file_name)
+            break
+        else:
+            num += 1
+
+    logger.info(f"binary file saved at: {file_name}")
+
+
+@ensure_annotations
 def load_bin(path: Path):
     """load binary data
 
