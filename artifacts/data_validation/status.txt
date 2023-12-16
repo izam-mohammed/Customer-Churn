@@ -1,6 +1,0 @@
-Validation number of column status: True                        
-Validation column types status: True                        
-Validation NA values status: True                        
-Validation categorical columns: True                        
-
-Validation all: True
