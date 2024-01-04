@@ -42,7 +42,7 @@ This repository follows a consistent code formatting approach to enhance readabi
 
 ### Python Files
 
-Python files in this repository are formatted using [Black](https://github.com/psf/black). Black is an opinionated code formatter that automatically formats your Python code to adhere to the PEP 8 style guide.
+Python files in this repository are formatted using [Black](https://github.com/psf/black). Black is a code formatter that automatically formats your Python code to adhere to the PEP 8 style guide.
 
 To ensure that your Python code is formatted correctly, you can install Black and format the code by running the following command in your terminal:
 
