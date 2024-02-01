@@ -34,7 +34,7 @@ class ModelTrainer:
 
 
     def _randomized_search(self, name,clf,params, runs=50): 
-        rand_clf = RandomizedSearchCV(clf, params, n_iter=runs, cv=5, n_jobs=-1, random_state=2, verbose=2)     
+        rand_clf = RandomizedSearchCV(clf, params, n_iter=runs, cv=5, n_jobs=-1, random_state=2, verbose=0)     
 
         rand_clf.fit(self.X_train, self.y_train) 
         best_model = rand_clf.best_estimator_
