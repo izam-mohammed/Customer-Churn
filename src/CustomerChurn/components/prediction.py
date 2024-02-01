@@ -12,6 +12,7 @@ class Prediction:
     """
     A class for making predictions using a trained model and vectorizer.
     """
+
     def __init__(self, config: PredictionConfig):
         """
         Initializes the Prediction instance with the provided configuration.
@@ -33,12 +34,12 @@ class Prediction:
         - None
         """
         if not os.path.exists(datapath):
-            filename, headers = request.urlretrieve(
-                url = url,
-                filename = datapath
-            )
+            filename, headers = request.urlretrieve(url=url, filename=datapath)
             logger.info(f"{filename} download!")
-            save_txt(data=str(headers), path=Path(os.path.join(self.config.root_dir, "download_status.txt")))
+            save_txt(
+                data=str(headers),
+                path=Path(os.path.join(self.config.root_dir, "download_status.txt")),
+            )
         else:
             logger.info(f"File already exists of size: {get_size(Path(datapath))}")
 
@@ -55,15 +56,19 @@ class Prediction:
             data = pd.read_csv(self.config.data_path)
         except Exception as e:
             logger.info(f"error - {e} while access predict data")
-            self._download_file("https://raw.githubusercontent.com/izam-mohammed/data-source/main/sample_customer_churn.csv", os.path.join(self.config.root_dir, "sample_data.csv"))
+            self._download_file(
+                "https://raw.githubusercontent.com/izam-mohammed/data-source/main/sample_customer_churn.csv",
+                os.path.join(self.config.root_dir, "sample_data.csv"),
+            )
             data = pd.read_csv(os.path.join(self.config.root_dir, "sample_data.csv"))
 
         data[self.config.target_column] = np.array(["Yes"])
-        
 
         vectorized_data = vectorizer.transform(data)
-        vectorized_data = vectorized_data[:,:-1]
+        vectorized_data = vectorized_data[:, :-1]
         prediction = model.predict(vectorized_data)
         logger.info(f"predicted the new data as {prediction[0]}")
 
-        save_json(path=self.config.prediction_file, data={'prediction':float(prediction[0])})
+        save_json(
+            path=self.config.prediction_file, data={"prediction": float(prediction[0])}
+        )

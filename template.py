@@ -62,16 +62,21 @@ for filepath in list_of_files:
     else:
         logging.info(f"{filename} is already exists")
 
+
 # writing data
 def get_data(data_url, data_name):
     os.makedirs("data", exist_ok=True)
     request.urlcleanup()
     file_name, headers = request.urlretrieve(data_url, data_name)
 
+
 project_head = "Customer Churn Prediction"
 repo_name = "Customer-Churn"
 short_description = "A repository for predict the customer churn data"
 
-get_data("https://raw.githubusercontent.com/izam-mohammed/data-source/main/setup_env.py", "write.py")
+get_data(
+    "https://raw.githubusercontent.com/izam-mohammed/data-source/main/setup_env.py",
+    "write.py",
+)
 os.system(f"python write.py {project_head} __ {repo_name} __ {short_description}")
 os.remove("write.py")

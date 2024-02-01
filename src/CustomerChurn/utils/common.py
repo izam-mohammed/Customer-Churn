@@ -157,6 +157,7 @@ def save_txt(data, path: Path):
 
     logger.info(f"txt file saved at: {path}")
 
+
 def is_nan(value):
     """Check if a value is NaN.
 
@@ -167,6 +168,7 @@ def is_nan(value):
         Bool: type of the value is na
     """
     return isinstance(value, float) and np.isnan(value)
+
 
 def round_batch(*vars):
     """
@@ -182,4 +184,3 @@ def round_batch(*vars):
     for i in vars:
         res.append(round(i, 3))
     return tuple(res)
-

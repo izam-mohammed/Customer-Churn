@@ -31,7 +31,7 @@ class DataValidation:
             all_cols = list(self.data.columns)
             all_schema = list(self.config.all_schema.keys())
 
-            validation_status = (all_cols == all_schema)
+            validation_status = all_cols == all_schema
 
             return validation_status
 
@@ -121,17 +121,24 @@ class DataValidation:
             validation_na = self._validate_na_values()
             validation_categories = self._validate_categories()
 
-            if validation_column and validation_na and validation_categories and validation_types:
+            if (
+                validation_column
+                and validation_na
+                and validation_categories
+                and validation_types
+            ):
                 validation_all = True
             else:
                 validation_all = False
 
-            with open(self.config.STATUS_FILE, 'w') as f:
-                f.write(f"Validation number of column status: {validation_column}\n"
-                        f"Validation column types status: {validation_types}\n"
-                        f"Validation NA values status: {validation_na}\n"
-                        f"Validation categorical columns: {validation_categories}\n\n"
-                        f"Validation all: {validation_all}")
+            with open(self.config.STATUS_FILE, "w") as f:
+                f.write(
+                    f"Validation number of column status: {validation_column}\n"
+                    f"Validation column types status: {validation_types}\n"
+                    f"Validation NA values status: {validation_na}\n"
+                    f"Validation categorical columns: {validation_categories}\n\n"
+                    f"Validation all: {validation_all}"
+                )
 
         except Exception as e:
             raise e

@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 from pathlib import Path
-from sklearn.model_selection import train_test_split  
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
@@ -10,6 +10,7 @@ from sklearn.preprocessing import MinMaxScaler
 from CustomerChurn import logger
 from CustomerChurn.utils.common import save_bin
 from CustomerChurn.entity.config_entity import DataTransformationConfig
+
 
 class DataTransformation:
     """
@@ -37,7 +38,7 @@ class DataTransformation:
             data.drop(["customerID"], axis=1, inplace=True)
 
             # Convert total charges to numeric
-            data['TotalCharges'] = pd.to_numeric(data['TotalCharges'], errors='coerce')
+            data["TotalCharges"] = pd.to_numeric(data["TotalCharges"], errors="coerce")
 
             categorical_features = self.config.features.categorical
             numeric_features = self.config.features.numerical
@@ -48,7 +49,7 @@ class DataTransformation:
             numeric_transformer = Pipeline(
                 steps=[
                     ("imputer", SimpleImputer(strategy="mean")),
-                    ("scaler", MinMaxScaler(feature_range=(0, 1)))
+                    ("scaler", MinMaxScaler(feature_range=(0, 1))),
                 ]
             )
 
@@ -56,7 +57,7 @@ class DataTransformation:
                 steps=[
                     ("imputer", SimpleImputer(strategy="most_frequent")),
                     ("encoder", OrdinalEncoder()),
-                    ("normalizer", MinMaxScaler())
+                    ("normalizer", MinMaxScaler()),
                 ]
             )
 
@@ -70,8 +71,13 @@ class DataTransformation:
             preprocessed_data = preprocessor.fit_transform(data)
             preprocessed_df = pd.DataFrame(preprocessed_data, columns=data.columns)
 
-            save_bin(data=preprocessor, path=Path(os.path.join(self.config.root_dir, self.config.encoder_name)))
-            preprocessed_df.to_csv(os.path.join(self.config.root_dir, "encoded_data.csv"), index=False)
+            save_bin(
+                data=preprocessor,
+                path=Path(os.path.join(self.config.root_dir, self.config.encoder_name)),
+            )
+            preprocessed_df.to_csv(
+                os.path.join(self.config.root_dir, "encoded_data.csv"), index=False
+            )
             logger.info(f"The data shape - {preprocessed_data.shape}")
 
         except Exception as e:
@@ -90,7 +96,9 @@ class DataTransformation:
             X = data.drop(self.config.target_col, axis=1)
             y = data[self.config.target_col]
 
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=2)
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=0.2, random_state=2
+            )
 
             train = pd.concat([X_train, y_train], axis=1)
             test = pd.concat([X_test, y_test], axis=1)

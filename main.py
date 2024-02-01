@@ -1,9 +1,16 @@
 from CustomerChurn import logger
 from CustomerChurn.pipeline.stage_01_data_ingestion import DataIngestionTrainingPipeline
-from CustomerChurn.pipeline.stage_02_data_validation import DataValidationTrainingPipeline
-from CustomerChurn.pipeline.stage_03_data_transformation import DataTransformationTrainingPipeline
+from CustomerChurn.pipeline.stage_02_data_validation import (
+    DataValidationTrainingPipeline,
+)
+from CustomerChurn.pipeline.stage_03_data_transformation import (
+    DataTransformationTrainingPipeline,
+)
 from CustomerChurn.pipeline.stage_04_model_training import ModelTrainerTrainingPipeline
-from CustomerChurn.pipeline.stage_05_model_evaluation import ModelEvaluationTrainingPipeline
+from CustomerChurn.pipeline.stage_05_model_evaluation import (
+    ModelEvaluationTrainingPipeline,
+)
+
 
 def run_pipeline(stage_name, pipeline_instance):
     """

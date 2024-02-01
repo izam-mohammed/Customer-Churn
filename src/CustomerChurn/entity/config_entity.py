@@ -1,12 +1,14 @@
 from dataclasses import dataclass
 from pathlib import Path
 
+
 @dataclass(frozen=True)
 class DataIngestionConfig:
     root_dir: Path
     source_URL: str
     local_data_file: Path
     unzip_dir: Path
+
 
 @dataclass(frozen=True)
 class DataValidationConfig:
@@ -18,6 +20,7 @@ class DataValidationConfig:
     nan_ratio: float
     categories: dict
 
+
 @dataclass(frozen=True)
 class DataTransformationConfig:
     root_dir: Path
@@ -27,6 +30,7 @@ class DataTransformationConfig:
     all_cols: list
     target_col: str
     features: dict
+
 
 @dataclass(frozen=True)
 class ModelTrainerConfig:
@@ -39,6 +43,7 @@ class ModelTrainerConfig:
     permanent_path: str
     auto_select: bool
 
+
 @dataclass(frozen=True)
 class ModelEvaluationConfig:
     root_dir: Path
@@ -46,6 +51,7 @@ class ModelEvaluationConfig:
     model_path: Path
     target_column: str
     models_dir: str
+
 
 @dataclass(frozen=True)
 class PredictionConfig:

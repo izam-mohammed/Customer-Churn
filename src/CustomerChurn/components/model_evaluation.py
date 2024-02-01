@@ -1,9 +1,22 @@
 import os
 import pandas as pd
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, roc_curve, auc
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score,
+    roc_curve,
+    auc,
+)
 from sklearn.metrics import confusion_matrix, precision_recall_curve
 from sklearn.metrics import classification_report
-from CustomerChurn.utils.common import load_bin, save_json, round_batch, create_directories
+from CustomerChurn.utils.common import (
+    load_bin,
+    save_json,
+    round_batch,
+    create_directories,
+)
 from CustomerChurn import logger
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -16,6 +29,7 @@ class ModelEvaluation:
     """
     A class for evaluating machine learning models based on various metrics and generating visualizations.
     """
+
     def __init__(self, config: ModelEvaluationConfig):
         """
         Initializes the ModelEvaluation instance with the provided configuration.
@@ -24,9 +38,8 @@ class ModelEvaluation:
         - config (ModelEvaluationConfig): Configuration settings for model evaluation.
         """
         self.config = config
-    
 
-    def _eval_metrics(self,actual, pred, dir):
+    def _eval_metrics(self, actual, pred, dir):
         """
         Computes and logs various classification metrics based on predictions.
 
@@ -44,11 +57,13 @@ class ModelEvaluation:
         f1 = f1_score(actual, pred)
         rocauc_score = roc_auc_score(actual, pred)
 
-        acc, precision, recall, f1, rocauc_score = round_batch(acc, precision, recall, f1, rocauc_score)
+        acc, precision, recall, f1, rocauc_score = round_batch(
+            acc, precision, recall, f1, rocauc_score
+        )
 
         metric = {
-            "Accuracy" : acc,
-            "Precision" : precision,
+            "Accuracy": acc,
+            "Precision": precision,
             "Recall": recall,
             "F1 score": f1,
             "roc auc score": rocauc_score,
@@ -74,9 +89,8 @@ class ModelEvaluation:
         rpt = classification_report(actual, pred, output_dict=True)
         rpt_df = pd.DataFrame(rpt).transpose()
         rpt_df.loc["accuracy", "support"] = rpt_df.loc["macro avg", "support"]
-        dfi.export(rpt_df, os.path.join(dir, "classification_report.png"))               
-    
-    
+        dfi.export(rpt_df, os.path.join(dir, "classification_report.png"))
+
     def _eval_pics(self, actual, pred_proba, dir):
         """
         Generates and saves ROC curve, Precision-Recall curve, and confusion matrix images.
@@ -95,44 +109,62 @@ class ModelEvaluation:
 
         # Plot ROC curve
         plt.figure(figsize=(8, 6))
-        plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (AUC = {:.2f})'.format(roc_auc))
-        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--', label='Random Guessing')
-        plt.xlabel('False Positive Rate (FPR)')
-        plt.ylabel('True Positive Rate (TPR)')
-        plt.title('Receiver Operating Characteristic (ROC) Curve')
-        plt.legend(loc='lower right')
+        plt.plot(
+            fpr,
+            tpr,
+            color="darkorange",
+            lw=2,
+            label="ROC curve (AUC = {:.2f})".format(roc_auc),
+        )
+        plt.plot(
+            [0, 1], [0, 1], color="navy", lw=2, linestyle="--", label="Random Guessing"
+        )
+        plt.xlabel("False Positive Rate (FPR)")
+        plt.ylabel("True Positive Rate (TPR)")
+        plt.title("Receiver Operating Characteristic (ROC) Curve")
+        plt.legend(loc="lower right")
 
         plt.savefig(os.path.join(dir, "roc_curve.png"))
         plt.close()
-        logger.info(f"Saved the ROC curve image at {os.path.join(dir, 'roc_curve.png')}")
+        logger.info(
+            f"Saved the ROC curve image at {os.path.join(dir, 'roc_curve.png')}"
+        )
 
         # plt the pr curve
         pr, rc, thresholds = precision_recall_curve(actual, pred_proba)
         pr_auc = auc(rc, pr)
 
         plt.figure(figsize=(8, 6))
-        plt.plot(rc, pr, color='magenta', lw=2, label='PR curve (AUC = {:.2f})'.format(pr_auc))
-        plt.xlabel('Recall')
-        plt.ylabel('Precision')
-        plt.title('Precision-Recall Curve')
-        plt.legend(loc='lower left')
+        plt.plot(
+            rc,
+            pr,
+            color="magenta",
+            lw=2,
+            label="PR curve (AUC = {:.2f})".format(pr_auc),
+        )
+        plt.xlabel("Recall")
+        plt.ylabel("Precision")
+        plt.title("Precision-Recall Curve")
+        plt.legend(loc="lower left")
 
         plt.savefig(os.path.join(dir, "pr_curve.png"))
         plt.close()
         logger.info(f"Saved the ROC curve image at {os.path.join(dir, 'pr_curve.png')}")
 
-        #confusion matrix
+        # confusion matrix
         y_pred = (pred_proba > 0.5).astype(int)
         cm = confusion_matrix(actual, y_pred)
         plt.figure(figsize=(8, 6))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', annot_kws={"size": 16})
-        plt.xlabel('Predicted Labels')
-        plt.ylabel('True Labels')
-        plt.title('Confusion Matrix')
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", annot_kws={"size": 16})
+        plt.xlabel("Predicted Labels")
+        plt.ylabel("True Labels")
+        plt.title("Confusion Matrix")
 
         plt.savefig(os.path.join(dir, "confusion_matrix.png"))
         plt.close()
-        logger.info(f"Saved the cunfusion matrix image at {os.path.join(dir, 'confusion_matrix.png')}")
+        logger.info(
+            f"Saved the cunfusion matrix image at {os.path.join(dir, 'confusion_matrix.png')}"
+        )
 
     def _evealuation_pic(self, metrics, dir):
         """
@@ -146,19 +178,28 @@ class ModelEvaluation:
         - None
         """
         df = pd.DataFrame(metrics).transpose()
-        ax = df.plot(kind='barh', figsize=(11, 17), color=["#B347CB", "#7147CB", "#475FCB", "#47A1CB", "#47CBB3"])
-        ax.set_xlabel('Score')
-        ax.set_title('Metrics for Different Algorithms')
+        ax = df.plot(
+            kind="barh",
+            figsize=(11, 17),
+            color=["#B347CB", "#7147CB", "#475FCB", "#47A1CB", "#47CBB3"],
+        )
+        ax.set_xlabel("Score")
+        ax.set_title("Metrics for Different Algorithms")
 
         # Annotating each bar with the precision and recall values
         for p in ax.patches:
-            ax.annotate(f'{p.get_width():.2f}', (p.get_width()+0.01, p.get_y() + p.get_height() / 2.),
-                        ha='center', va='center', xytext=(10, 0), textcoords='offset points')
+            ax.annotate(
+                f"{p.get_width():.2f}",
+                (p.get_width() + 0.01, p.get_y() + p.get_height() / 2.0),
+                ha="center",
+                va="center",
+                xytext=(10, 0),
+                textcoords="offset points",
+            )
         plt.legend(loc="upper left")
         plt.savefig(os.path.join(dir, "metrics.png"))
         plt.close()
-        logger.info(f"Saved the metrics image at {os.path.join(dir, 'metric.png')}")       
-
+        logger.info(f"Saved the metrics image at {os.path.join(dir, 'metric.png')}")
 
     def evaluate(self):
         """
@@ -181,7 +222,7 @@ class ModelEvaluation:
             raise e
 
         logger.info(f"predicted {pred.shape[0]} data points")
-    
+
         self._eval_metrics(y, pred, self.config.root_dir)
         self._eval_pics(y, pred_proba, self.config.root_dir)
 
@@ -202,7 +243,6 @@ class ModelEvaluation:
                 continue
 
             logger.info(f"predicted with {model}")
-            
 
             create_directories([new_dir])
 
@@ -211,5 +251,5 @@ class ModelEvaluation:
             self._classification_report(y, pred, new_dir)
 
             metrics[model_name] = metric
-        
+
         self._evealuation_pic(metrics=metrics, dir=self.config.root_dir)

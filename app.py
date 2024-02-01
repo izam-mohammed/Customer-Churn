@@ -53,26 +53,25 @@ def pred():
 
         data = pd.DataFrame(
             {
-                "Gender": [ gender ],
-                "SeniorCitizen" : [ SeniorCitizen ],
-                "Partner": [ Partner ],
-                "Dependents" : [ Dependents ],
-                "tenure" : [ tenure ],
-                "PhoneService" : [ PhoneService ],
-                "MultipleLines" : [ MultipleLines ],
-                "InternetService" : [ InternetService ],
-                "OnlineSecurity" : [ OnlineSecurity ],
-                "OnlineBackup" : [ OnlineBackup ],
-                "DeviceProtection" : [ DeviceProtection ],
-                "TechSupport" : [ TechSupport ],
-                "StreamingTV" : [ StreamingTV ],
-                "StreamingMovies" : [ StreamingMovies ],
-                "Contract" : [ Contract ],
-                "PaperlessBilling" : [ PaperlessBilling ],
-                "PaymentMethod" : [ PaymentMethod ],
-                "MonthlyCharges" : [ MonthlyCharges ],
-                "TotalCharges" : [ TotalCharges ],
-
+                "Gender": [gender],
+                "SeniorCitizen": [SeniorCitizen],
+                "Partner": [Partner],
+                "Dependents": [Dependents],
+                "tenure": [tenure],
+                "PhoneService": [PhoneService],
+                "MultipleLines": [MultipleLines],
+                "InternetService": [InternetService],
+                "OnlineSecurity": [OnlineSecurity],
+                "OnlineBackup": [OnlineBackup],
+                "DeviceProtection": [DeviceProtection],
+                "TechSupport": [TechSupport],
+                "StreamingTV": [StreamingTV],
+                "StreamingMovies": [StreamingMovies],
+                "Contract": [Contract],
+                "PaperlessBilling": [PaperlessBilling],
+                "PaymentMethod": [PaymentMethod],
+                "MonthlyCharges": [MonthlyCharges],
+                "TotalCharges": [TotalCharges],
             }
         )
         data.to_csv(data_path, index=False)
@@ -89,7 +88,7 @@ def pred():
     except Exception as e:
         print("The Exception message is: ", e)
         return jsonify({"result": "error"})
-    
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
