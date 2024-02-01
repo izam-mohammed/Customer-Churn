@@ -20,9 +20,18 @@ from sklearn.ensemble import AdaBoostClassifier
 from xgboost import XGBClassifier
 
 
-
 class ModelTrainer:
+    """
+    A class for training and selecting the best machine learning model based on the provided configuration.
+    """
+
     def __init__(self, config: ModelTrainerConfig):
+        """
+        Initializes the ModelTrainer instance with the provided configuration and loads train and test data.
+
+        Args:
+        - config (ModelTrainerConfig): Configuration settings for model training.
+        """
         self.config = config
         train = pd.read_csv(self.config.train_data_path)
         test = pd.read_csv(self.config.test_data_path)
@@ -34,30 +43,42 @@ class ModelTrainer:
 
 
     def _randomized_search(self, name,clf,params, runs=50): 
-        rand_clf = RandomizedSearchCV(clf, params, n_iter=runs, cv=5, n_jobs=-1, random_state=2, verbose=0)     
+        """
+        Performs randomized search for hyperparameter tuning and evaluates the model.
+
+        Args:
+        - name (str): Name of the model for logging purposes.
+        - clf: Machine learning model.
+        - params: Hyperparameter grid or distribution for randomized search.
+        - runs (int): Number of iterations for randomized search.
+
+        Returns:
+        - Tuple[Any, float]: Tuple containing the best model and its accuracy score.
+        """
+        rand_clf = RandomizedSearchCV(clf, params, n_iter=runs, cv=5, n_jobs=4, random_state=2, verbose=1)     
 
         rand_clf.fit(self.X_train, self.y_train) 
         best_model = rand_clf.best_estimator_
         
-        # Extract best score
         best_score = rand_clf.best_score_
-
-        # Print best score
         logger.info("Trained with {} with score: {:.3f}".format(name, best_score))
 
-        # Predict test set labels
         y_pred = best_model.predict(self.X_test)
 
-        # Compute accuracy
-        accuracy = accuracy_score(self.y_test, y_pred)
 
-        # Print accuracy
+        accuracy = accuracy_score(self.y_test, y_pred)
         logger.info('Predicted with {} ; Test score : {:.3f}'.format(name, accuracy))
         
         return best_model, accuracy
 
 
     def train(self):
+        """
+        Trains multiple machine learning models, selects the best one, and saves the model.
+
+        Returns:
+        - None
+        """
         model_params = self.config.params
 
         models = ConfigBox({
@@ -134,8 +155,9 @@ class ModelTrainer:
                 "model" : AdaBoostClassifier(),
                 "params" : model_params.AdaBoost,
                 "auto":{
-                        'n_estimators': range(50, 500),
-                        'learning_rate': uniform(0.01, 1.0), 
+                        'n_estimators': range(50, 200),
+                        'learning_rate': uniform(0.01, 1.0),  # Uniform distribution for learning_rate
+                        'algorithm': ['SAMME', 'SAMME.R'],
                         'base_estimator': [None, DecisionTreeClassifier(max_depth=1), DecisionTreeClassifier(max_depth=2)],
                 }
             },

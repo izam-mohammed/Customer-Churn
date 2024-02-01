@@ -13,11 +13,31 @@ from pathlib import Path
 
 
 class ModelEvaluation:
+    """
+    A class for evaluating machine learning models based on various metrics and generating visualizations.
+    """
     def __init__(self, config: ModelEvaluationConfig):
+        """
+        Initializes the ModelEvaluation instance with the provided configuration.
+
+        Args:
+        - config (ModelEvaluationConfig): Configuration settings for model evaluation.
+        """
         self.config = config
     
 
     def _eval_metrics(self,actual, pred, dir):
+        """
+        Computes and logs various classification metrics based on predictions.
+
+        Args:
+        - actual: True labels.
+        - pred: Predicted labels.
+        - dir (str): Directory path for saving metrics.
+
+        Returns:
+        - dict: Dictionary containing computed metrics.
+        """
         acc = accuracy_score(actual, pred)
         precision = precision_score(actual, pred)
         recall = recall_score(actual, pred)
@@ -40,6 +60,17 @@ class ModelEvaluation:
         return metric
 
     def _classification_report(self, actual, pred, dir):
+        """
+        Generates and exports a classification report as an image.
+
+        Args:
+        - actual: True labels.
+        - pred: Predicted labels.
+        - dir (str): Directory path for saving the classification report image.
+
+        Returns:
+        - None
+        """
         rpt = classification_report(actual, pred, output_dict=True)
         rpt_df = pd.DataFrame(rpt).transpose()
         rpt_df.loc["accuracy", "support"] = rpt_df.loc["macro avg", "support"]
@@ -47,6 +78,17 @@ class ModelEvaluation:
     
     
     def _eval_pics(self, actual, pred_proba, dir):
+        """
+        Generates and saves ROC curve, Precision-Recall curve, and confusion matrix images.
+
+        Args:
+        - actual: True labels.
+        - pred_proba: Predicted probabilities.
+        - dir (str): Directory path for saving images.
+
+        Returns:
+        - None
+        """
         logger.info(actual.shape)
         fpr, tpr, thresholds = roc_curve(actual, pred_proba)
         roc_auc = auc(fpr, tpr)
@@ -93,6 +135,16 @@ class ModelEvaluation:
         logger.info(f"Saved the cunfusion matrix image at {os.path.join(dir, 'confusion_matrix.png')}")
 
     def _evealuation_pic(self, metrics, dir):
+        """
+        Plots and saves a bar chart comparing metrics for different algorithms.
+
+        Args:
+        - metrics (dict): Dictionary containing metrics for different algorithms.
+        - dir (str): Directory path for saving the metrics bar chart image.
+
+        Returns:
+        - None
+        """
         df = pd.DataFrame(metrics).transpose()
         ax = df.plot(kind='barh', figsize=(11, 17), color=["#B347CB", "#7147CB", "#475FCB", "#47A1CB", "#47CBB3"])
         ax.set_xlabel('Score')
@@ -109,6 +161,12 @@ class ModelEvaluation:
 
 
     def evaluate(self):
+        """
+        Evaluates the main model and other models, generating metrics and visualizations.
+
+        Returns:
+        - None
+        """
         df = pd.read_csv(self.config.test_data_path)
         X = df.drop([self.config.target_column], axis=1)
         y = df[self.config.target_column]

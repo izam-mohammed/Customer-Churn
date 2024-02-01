@@ -9,21 +9,46 @@ from pathlib import Path
 
 
 class Prediction:
+    """
+    A class for making predictions using a trained model and vectorizer.
+    """
     def __init__(self, config: PredictionConfig):
+        """
+        Initializes the Prediction instance with the provided configuration.
+
+        Args:
+        - config (PredictionConfig): Configuration settings for making predictions.
+        """
         self.config = config
 
     def _download_file(self, url, datapath):
-            if not os.path.exists(datapath):
-                filename, headers = request.urlretrieve(
-                    url = url,
-                    filename = datapath
-                )
-                logger.info(f"{filename} download!")
-                save_txt(data=str(headers), path=Path(os.path.join(self.config.root_dir, "download_status.txt")))
-            else:
-                logger.info(f"File already exists of size: {get_size(Path(datapath))}")
+        """
+        Downloads a file from a given URL and saves it to a specified path if not already present.
+
+        Args:
+        - url (str): URL of the file to download.
+        - datapath (str): Path where the downloaded file should be saved.
+
+        Returns:
+        - None
+        """
+        if not os.path.exists(datapath):
+            filename, headers = request.urlretrieve(
+                url = url,
+                filename = datapath
+            )
+            logger.info(f"{filename} download!")
+            save_txt(data=str(headers), path=Path(os.path.join(self.config.root_dir, "download_status.txt")))
+        else:
+            logger.info(f"File already exists of size: {get_size(Path(datapath))}")
 
     def predict(self):
+        """
+        Uses the trained model and vectorizer to make predictions on new data.
+
+        Returns:
+        - None
+        """
         model = load_bin(Path(self.config.model_path))
         vectorizer = load_bin(Path(self.config.vectorizer_path))
         try:
